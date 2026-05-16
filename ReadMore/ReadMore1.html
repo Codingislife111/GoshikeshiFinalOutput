@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top 5 Anime of All Time</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Rubik+Moonrocks&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="ReadMore1.css">
+</head>
+<body>
+    <div class="page-shell">
+        <header class="site-header">
+            <div class="brand">
+                <span class="brand-mark">🌸</span>
+                <div>
+                    <h1>Goshikeshi</h1>
+                </div>
+            </div>
+            <nav>
+                <a href="../index.html"></a> <!--Home page-->
+                <a href="ReadMore2.html">Next</a>
+                <div id="Search" class="search-bar reveal">
+                <input type="text" id="searchInput" placeholder="search top anime of all time...">
+                <button onclick="searchPosts()">Search</button>
+            </div>
+            </nav>
+        </header>
+
+        <main>
+            <article class="anime-list">
+                <h1>Top 5 Anime of All Time</h1>
+                <p class="intro">Discover the greatest anime series that have captivated audiences worldwide.</p>
+                    
+                <div class="post-list">
+                    <article class="post-preview" id="post-one-piece" data-slug="one piece">
+                        <img class="post-thumb" src="https://www.animationmagazine.net/wordpress/wp-content/uploads/one-piece-1.jpg" alt="one piece">
+                        <div>
+                            <div class="post-meta"></div>
+                            <h3>one Piece</h3>
+                            <p>The anime centers on Monkey D. Luffy, a 17-year-old whose body gained the properties of rubber after eating the Gomu Gomu no Mi Devil Fruit. Inspired by the pirate Shanks, Luffy sets out to explore the Grand Line in search of the ultimate treasure, the One Piece, aiming to become the next King of the Pirates. Along the way, he forms the Straw Hat Pirates, a crew of diverse individuals, each with unique skills and personal goals, including Roronoa Zoro, Nami, Usopp, Sanji, and Tony Tony Chopper.</p>
+                        </div>
+                    </article>
+
+                    <article class="post-preview" id="post-jujutsu-kaisen" data-slug="jujutsu kaisen">
+                        <img class="post-thumb" src="https://p325k7wa.twic.pics/high/jujutsu-kaisen/jujutsu-kaisen-cursed-clash/00-page-setup/JJK-header-mobile2.jpg?twic=v1/resize=760/step=10/quality=80" alt="Jujutsu Kaisen">
+                        <div>
+                            <div class="post-meta"></div>
+                            <h3>Jujutsu Kaisen</h3>
+                            <p>Although born with tremendous power, Itadori Yuji lives a completely ordinary life. One day, to save a classmate, he eats a cursed finger, and now Ryomen Sukuna lives in Itadori's soul. Guided by the Jujutsu Sorcerers, he joins the Tokyo Metropolitan Jujutsu Technical High School, an organization that fights the curses. Now begins the heroic tale of a boy who became a curse to end a curse.</p>
+                        </div>
+                    </article>
+
+                    <article class="post-preview" id="post-blue-lock" data-slug="blue lock">
+                        <img class="post-thumb" src="https://wyomingwolfpackpress.com/wp-content/uploads/2025/04/ZnAHUGdD1tLIVT3e1z63QXQ51pH3z4qimQ3LoC8L-1200x675.png" alt="Blue Lock">
+                        <div>
+                            <div class="post-meta"></div>
+                            <h3>Blue Lock</h3>
+                            <p>The Japan national team finished 16th in the 2018 FIFA World Cup. The Japan Football Union hires the football enigma Jinpachi Ego. His masterplan to lead Japan to stardom is Blue Lock, a training regimen designed to create the world's greatest egotistic striker. Those who fail Blue Lock will never again be permitted to represent Japan. Yoichi Isagi, an unknown high school football player who is conflicted about his playing style, decides to join the program competing against 299 other players to become the best striker in the world.</p>
+                        </div>
+                    </article>
+
+                    <article class="post-preview" id="post-horimiya" data-slug="horimiya">
+                        <img class="post-thumb" src="https://animenew.com.br/wp-content/uploads/2023/06/Horimiya-The-Missing-Pieces-Novo-trailer-revela-a-data-de-estreia-do-anime-1-jpg.webp" alt="Horimiya">
+                        <div>
+                            <div class="post-meta"></div>
+                            <h3>Horimiya</h3>
+                            <p>The popular and outwardly cheerful Kyouko Hori, and the quiet and reserved Izumi Miyamura. Outside of school, the pair are complete opposites of their public personas. A chance encounter after school leads them to discover each other's secret selves, forming a bond that blossoms into a romance.</p>
+                        </div>
+                    </article>
+
+                    <article class="post-preview" id="post-my-dress-up-darling" data-slug="my dress up darling">
+                        <img class="post-thumb" src="https://www.leisurebyte.com/wp-content/uploads/2022/03/Screenshot-4602.jpg" alt="My Dress-Up Darling">
+                        <div>
+                            <div class="post-meta"></div>
+                            <h3>My Dress-Up Darling</h3>
+                            <p>Wakana Gojo is a high school boy who wants to become a kashirashi--a master craftsman who makes traditional Japanese Hina dolls. Though he's gung-ho about the craft, he knows nothing about the latest trends, and has a hard time fitting in with his class. The popular kids--especially one girl, Marin Kitagawa--seem like they live in a completely different world. That all changes one day, when she shares an unexpected secret with him, and their completely different worlds collide.</p>
+                        </div>
+                    </article>
+                </div>
+
+               
+            </article>
+        </main>
+    </div>
+    <script>
+        function searchPosts() {
+            const query = document.getElementById('searchInput').value.trim().toLowerCase();
+            const posts = Array.from(document.querySelectorAll('.post-preview'));
+
+            if (!query) {
+                posts.forEach(post => post.style.display = 'block');
+                return;
+            }
+
+            let firstMatch = null;
+            posts.forEach(post => {
+                const slug = (post.dataset.slug || '').toLowerCase();
+                const text = post.textContent.toLowerCase();
+                const matched = slug.includes(query) || text.includes(query);
+                post.style.display = matched ? 'block' : 'none';
+                if (matched && !firstMatch) {
+                    firstMatch = post;
+                }
+            });
+
+            if (firstMatch) {
+                firstMatch.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                history.replaceState(null, '', `#${firstMatch.id}`);
+            }
+        }
+    </script>
+</body>
+</html>

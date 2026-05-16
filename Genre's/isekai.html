@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Isekai Anime List</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 50%, #ffecd2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            background: linear-gradient(45deg, #ff6b9d, #c44569, #f8b500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            color: #666;
+            font-weight: 300;
+        }
+
+        .search-box {
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        #searchInput {
+            width: 400px;
+            padding: 15px 20px;
+            font-size: 1.1em;
+            border: 2px solid #ff6b9d;
+            border-radius: 50px;
+            outline: none;
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.95);
+        }
+
+        #searchInput:focus {
+            border-color: #c44569;
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.4);
+            transform: scale(1.02);
+        }
+
+        .anime-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .anime-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+        }
+
+        .anime-card::before {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 2em;
+            z-index: 2;
+            opacity: 0.8;
+        }
+
+        .isekai-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(45deg, #ff6b9d, #c44569);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 25px;
+            font-size: 0.85em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 2;
+        }
+
+        .anime-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        .anime-poster {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .anime-card:hover .anime-poster {
+            transform: scale(1.1);
+        }
+
+        .anime-info {
+            padding: 25px;
+            position: relative;
+            z-index: 3;
+        }
+
+        .anime-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .anime-year {
+            color: #ff6b9d;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .anime-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 0.95em;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            background: linear-gradient(45deg, #a8edea, #fed6e3);
+            color: #333;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stars {
+            color: #f8b500;
+            font-size: 1.2em;
+        }
+
+        .score {
+            font-weight: bold;
+            color: #c44569;
+            font-size: 1.1em;
+        }
+
+        .no-results {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 60px;
+            color: #666;
+            font-size: 1.2em;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5em;
+            }
+            
+            #searchInput {
+                width: 90%;
+            }
+            
+            .anime-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌌 Isekai Anime</h1>
+            <p class="subtitle">Transported to another world - epic adventures await!</p>
+        </header>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search isekai worlds... 🏰">
+        </div>
+
+        <div class="anime-grid" id="animeGrid">
+            <!-- Anime cards will be populated by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        const animeData = [
+             {
+                title: "Saga of Tanya the Evil",
+                year: "2017",
+                description: "It is June of the year CE 1923. A young girl with blond hair and blue eyes, Tanya Degurechaff, has entered the final curriculum of the Imperial Military Academy and is training at the third patrol line in the northern military district, the Norden Theater, as part of her service to the force. Her training, the first step toward a brilliant career as an aviation mage, should have gone off without a hitch... but things took an unexpected turn.",
+                poster: "https://wallpaperaccess.com/full/1598662.jpg",
+                tags: ["adventure", "action","drama", "thriller","fantasy"],
+                score: 9.6
+            },
+            {
+                title: "Re:Zero - Starting Life in Another World",
+                year: "2016",
+                description: "Subaru Natsuki is transported to a fantasy world where he discovers he has the ability to return by death after dying.",
+                poster: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1277510/capsule_616x353.jpg?t=1715700857",
+                tags: ["Dark Fantasy", "Time Loop", "Psychological"],
+                score: 8.4
+            },
+            {
+                title: "That Time I Got Reincarnated as a Slime",
+                year: "2018",
+                description: "A 37-year-old salaryman is reincarnated as a slime in a fantasy world and builds a nation of monsters.",
+                poster: "https://i.redd.it/ukviaa403npa1.jpg",
+                tags: ["Nation Building", "Comedy", "OP MC"],
+                score: 8.4
+            },
+            {
+                title: "Sword Art Online",
+                year: "2012",
+                description: "Thousands of players are trapped in a VRMMO world where dying in-game means dying in real life.",
+                poster: "https://static.wikia.nocookie.net/all-fiction-battles/images/2/22/SAO_Tabber.jpg/revision/latest?cb=20201224034341",
+                tags: ["VRMMO", "Action", "Harem"],
+                score: 7.5
+            },
+            {
+                title: "Farming life in another world",
+                year: "2023",
+                description: "When a godlike figure gives Hiraku a chance to live again, he wishes to be healthy, to live peacefully, to speak the local language, and to spend his days on an idyllic farm.",
+                poster: "https://images.plex.tv/photo?size=large-1280&url=https:%2F%2Fmetadata-static.plex.tv%2F5%2Fgracenote%2F582af459c1cc8be7e277688a27b8e105.jpg",
+                tags: ["slice of life", "isekai","fantasy"],
+                score: 7.3
+            },
+            {
+                title: "Overlord",
+                year: "2015",
+                description: "The most powerful wizard in an MMORPG becomes trapped as his overpowered undead character in a new world.",
+                poster: "https://i0.wp.com/gamingph.com/wp-content/uploads/2025/02/image-9.png?ssl=1",
+                tags: ["OP MC", "Dark Fantasy", "Conquest"],
+                score: 8.1
+            },
+            {
+                title: "Konosuba: God's Blessing on This Wonderful World!",
+                year: "2016",
+                description: "A shut-in NEET is transported to a fantasy world but gets a useless goddess and a dysfunctional party.",
+                poster: "https://imgsrv.crunchyroll.com/cdn-cgi/image/fit=contain,format=auto,quality=85,width=1200,height=675/catalog/crunchyroll/131f32cf27743b9c95b78b4b3fb1c6ee.jpg",
+                tags: ["Comedy", "Parody", "Harem"],
+                score: 8.4
+            },
+            {
+                title: "The Rising of the Shield Hero",
+                year: "2019",
+                description: "Naofumi Iwatani is summoned as the Shield Hero but faces betrayal and discrimination from the start.",
+                poster: "https://readysteadycut.com/wp-content/uploads/2023/10/Shield-Hero.png",
+                tags: ["Revenge", "Slow Burn", "Party Building"],
+                score: 8.0
+            },
+            {
+                title: "Mushoku Tensei: Jobless Reincarnation",
+                year: "2021",
+                description: "A 34-year-old NEET is reincarnated as Rudeus Greyrat with all his memories intact in a fantasy world.",
+                poster: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2PS-SaGq5N7jLdabZUBOrVsJ7KmiDgyaZsw&ss                                ",
+                tags: ["Reincarnation", "Magic", "Slice of Life"],
+                score: 8.6
+            },
+            {
+                title: "No Game No Life",
+                year: "2014",
+                description: "Gamer siblings Sora and Shiro are transported to a world where everything is decided by games.",
+                poster: "https://external-preview.redd.it/no-game-no-life-zero-film-earns-700-million-yen-v0-OIVeiACgvSE_WjqvHzk1F3_ole_xW5XNq-fi7eh3DHc.jpg?auto=webp&s=52f80b89b3b47e9b1a8bda09dfeb5125d64b38d8",
+                tags: ["Strategy", "Genius MC", "Ecchi"],
+                score: 8.1
+            },
+            {
+                title: "The Eminence in Shadow",
+                year: "2022",
+                description: "Cid Kagenou builds a secret evil organization while pretending to be a normal student in his new world.",
+                poster: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVs8pxgn02elHR5Tx016KOh6yUUqUTI1g4pQ&s",
+                tags: ["Comedy", "OP MC", "Misunderstood"],
+                score: 8.3
+            },
+            {
+                title: "So I'm a Spider, So What?",
+                year: "2021",
+                description: "A high school girl is reincarnated as the weakest monster, a spider, and must survive through evolution.",
+                poster: "https://i0.wp.com/anitrendz.net/news/wp-content/uploads/2021/03/So-Im-a-Spider-So-What-1.jpg",
+                tags: ["Monster Evolution", "Survival", "Comedy"],
+                score: 7.6
+            }
+        ];
+
+        function createAnimeCard(anime) {
+            const stars = '★'.repeat(Math.floor(anime.score)) + '☆'.repeat(10 - Math.floor(anime.score));
+            
+            return `
+                <div class="anime-card">
+                    <div class="isekai-badge">Isekai</div>
+                    <img src="${anime.poster}" alt="${anime.title}" class="anime-poster">
+                    <div class="anime-info">
+                        <h3 class="anime-title">${anime.title}</h3>
+                        <div class="anime-year">${anime.year}</div>
+                        <p class="anime-description">${anime.description}</p>
+                        <div class="tags">
+                            ${anime.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                        <div class="rating">
+                            <span class="stars">${stars}</span>
+                            <span class="score">${anime.score}/10</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayAnime(animeList) {
+            const grid = document.getElementById('animeGrid');
+            grid.innerHTML = animeList.map(createAnimeCard).join('');
+        }
+
+        function searchAnime() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = animeData.filter(anime => 
+                anime.title.toLowerCase().includes(query) ||
+                anime.description.toLowerCase().includes(query) ||
+                anime.tags.some(tag => tag.toLowerCase().includes(query))
+            );
+            
+            if (filtered.length === 0) {
+                document.getElementById('animeGrid').innerHTML = `
+                    <div class="no-results">
+                        <!-- <h2>🌌 No isekai found</h2>
+                        <p>Try searching for another world!</p> -->
+                         <h2> Wala ngani!! </h2>
+                        <video class"anime poster" src="Photos/baliw.mp4" autoplay loop width="100%"></video>
+                        <a href="../index.html">Back To Home Page</a>
+                    </div>
+                `;
+            } else {
+                displayAnime(filtered);
+            }
+        }
+
+        // Initialize
+        displayAnime(animeData);
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', searchAnime);
+    </script>
+</body>
+</html>

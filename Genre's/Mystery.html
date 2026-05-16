@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mystery Anime List</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 50%, #ffecd2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            background: linear-gradient(45deg, #ff6b9d, #c44569, #f8b500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            color: #666;
+            font-weight: 300;
+        }
+
+        .search-box {
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        #searchInput {
+            width: 400px;
+            padding: 15px 20px;
+            font-size: 1.1em;
+            border: 2px solid #ff6b9d;
+            border-radius: 50px;
+            outline: none;
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.95);
+        }
+
+        #searchInput:focus {
+            border-color: #c44569;
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.4);
+            transform: scale(1.02);
+        }
+
+        .anime-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .anime-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+        }
+
+        .anime-card::before {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 2em;
+            z-index: 2;
+            opacity: 0.8;
+        }
+
+        .isekai-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(45deg, #ff6b9d, #c44569);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 25px;
+            font-size: 0.85em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 2;
+        }
+
+        .anime-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        .anime-poster {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .anime-card:hover .anime-poster {
+            transform: scale(1.1);
+        }
+
+        .anime-info {
+            padding: 25px;
+            position: relative;
+            z-index: 3;
+        }
+
+        .anime-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .anime-year {
+            color: #ff6b9d;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .anime-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 0.95em;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            background: linear-gradient(45deg, #a8edea, #fed6e3);
+            color: #333;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stars {
+            color: #f8b500;
+            font-size: 1.2em;
+        }
+
+        .score {
+            font-weight: bold;
+            color: #c44569;
+            font-size: 1.1em;
+        }
+
+        .no-results {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 60px;
+            color: #666;
+            font-size: 1.2em;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5em;
+            }
+            
+            #searchInput {
+                width: 90%;
+            }
+            
+            .anime-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🕵️‍♂️ Mystery Anime</h1>
+            <p class="subtitle">Hidden truths and twisted clues — every answer leads to deeper secrets.</p>
+        </header>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search isekai worlds... 🏰">
+        </div>
+
+        <div class="anime-grid" id="animeGrid">
+        </div>
+    </div>
+
+    <script>
+        const animeData = [
+            {
+                title: "The Apothecary Diaries",
+                year: "2023",
+                description: "A young maiden is kidnapped and sold into servitude at the emperor's palace, where she secretly employs her pharmacist skills with the help of the head eunuch to unravel medical mysteries in the inner court.",
+                poster: "https://m.media-amazon.com/images/S/pv-target-images/7cf7b192dcef1221ff0c707c397e5298dec04d667df2251d1c25aa12e2a2b339.jpg",
+                tags: ["Slice Of Life", "Medical Drama", "Romance","Mystery"],
+                score: 8.6
+            },
+            {
+                title: "Tokyo Ghoul",
+                year: "2014",
+                description: "A Tokyo college student is attacked by a ghoul, a superpowered human who feeds on human flesh. He survives, but has become part ghoul and becomes a fugitive on the run.",
+                poster: "https://poggers.com/cdn/shop/articles/35a8c187-dae3-4863-9cb6-871df0b63400_backup_1200x600_crop_center.webp?v=1763984924",
+                tags: ["Psychological Horror", "Dark Fantasy", "SuperNatural"],
+                score: 7.7
+            },
+            {
+                title: "Kakegurui",
+                year: "2017",
+                description: "A gambling prodigy comes to an elite school run by games and turns the order upside down.",
+                poster: "https://www.uk-anime.net/Images/kakegurui_main.jpg?width=610&height=350&mode=crop",
+                tags: ["Psychological Thriller", "Thriller", "Drama",],
+                score: 7.1
+            },
+            {
+                title: "Oshi no Ko",
+                year: "2023",
+                description: "A doctor and his recently-deceased patient are reborn as twins to a famous Japanese musical idol and navigate the highs and lows of the Japanese entertainment industry as they grow up together through their lives.",
+                poster: "https://static.beebom.com/wp-content/uploads/2025/11/Oshi-no-Ko-season-3.jpg?w=1200&quality=75",
+                tags: ["slice of life", "mystery", "Psychological","Thriller"],
+                score: 8.3
+            },
+            {
+                title: "Detective Conan",
+                year: "1996",
+                description: "The cases of a detective whose physical age was chemically reversed to that of a prepubescent boy but must hide his true mental development.",
+                poster: "https://imgsrv.crunchyroll.com/cdn-cgi/image/fit=cover,format=auto,quality=85,width=1920/keyart/G6JQVM3ER-backdrop_wide",
+                tags: ["Isekai", "Adventure", "Sword And Sorcery"],
+                score: 8.5
+            },
+            {
+                title: "Death Note",
+                year: "2015",
+                description: "An intelligent high school student goes on a secret crusade to eliminate criminals from the world after discovering a notebook capable of killing anyone whose name is written into it.",
+                poster: "https://static0.gamerantimages.com/wordpress/wp-content/uploads/2023/03/death-note-cropped.jpg?w=1600&h=900&fit=crop",
+                tags: ["Psychological thriller", "Mystery", "Crime"],
+                score: 7.0
+            },
+            
+        ];
+
+        function createAnimeCard(anime) {
+            const stars = '★'.repeat(Math.floor(anime.score)) + '☆'.repeat(10 - Math.floor(anime.score));
+            
+            return `
+                <div class="anime-card">
+                    <div class="isekai-badge">Mystery</div>
+                    <img src="${anime.poster}" alt="${anime.title}" class="anime-poster">
+                    <div class="anime-info">
+                        <h3 class="anime-title">${anime.title}</h3>
+                        <div class="anime-year">${anime.year}</div>
+                        <p class="anime-description">${anime.description}</p>
+                        <div class="tags">
+                            ${anime.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                        <div class="rating">
+                            <span class="stars">${stars}</span>
+                            <span class="score">${anime.score}/10</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayAnime(animeList) {
+            const grid = document.getElementById('animeGrid');
+            grid.innerHTML = animeList.map(createAnimeCard).join('');
+        }
+
+        function searchAnime() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = animeData.filter(anime => 
+                anime.title.toLowerCase().includes(query) ||
+                anime.description.toLowerCase().includes(query) ||
+                anime.tags.some(tag => tag.toLowerCase().includes(query))
+            );
+            
+            if (filtered.length === 0) {
+                document.getElementById('animeGrid').innerHTML = `
+                    <div class="no-results">
+                        <!-- <h2>🌌 No isekai found</h2>
+                        <p>Try searching for another world!</p> -->
+                         <h2> Wala ngani!! </h2>
+                        <video class"anime poster" src="Photos/baliw.mp4" autoplay loop width="100%"></video>
+                        <a href="../index.html">Back To Home Page</a>
+                    </div>
+                `;
+            } else {
+                displayAnime(filtered);
+            }
+        }
+
+        // Initialize
+        displayAnime(animeData);
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', searchAnime);
+    </script>
+</body>
+</html>

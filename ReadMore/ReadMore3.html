@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manhwa Anime Adaptations</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Rubik+Moonrocks&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="ReadMore2.css">
+</head>
+<body>
+    <div class="page-shell">
+        <header class="site-header">
+            <div class="brand">
+                <span class="brand-mark">🌸</span>
+                <div>
+                    <h1>Goshikeshi</h1>
+                </div>
+            </div>
+            <nav>
+                <a href="../index.html"></a><!--Home Page-->
+                <a href="ReadMore2.html">Previous</a>
+                <div id="Search" class="search-bar reveal">
+                <input type="text" id="searchInput" placeholder="search anime...">
+                <button onclick="searchPosts()">Search</button>
+            </div>
+            </nav>
+        </header>
+
+        <main>
+            <article class="manhwa-list">
+                <h1>List Of Anime's that will make you cry or regret ever watching</h1>
+                <p class="intro"></p>
+
+                <div class="manhwa-container">
+                    <div class="manhwa" id="post-i-want-to-eat-your-pancrease" data-slug="i want to eat your pancreas">
+                        <img src=https://upload.wikimedia.org/wikipedia/en/2/2a/I_Want_to_Eat_Your_Pancreas_anime_film_poster.jpg alt="I Want to Eat Your Pancreas">
+                        <div class="info">
+                            <h2>I Want to Eat Your Pancreas</h2>
+                            <div class="details">
+                                <h3>Over View</h3>
+                                <p>I Want to Eat Your Pancreas (2018) is a Japanese animated coming-of-age drama about a reserved high school boy whose life changes when he learns a popular classmate is terminally ill. As they grow closer, their bond prompts reflections on life, death, and human connection. Praised for its emotional depth, tender storytelling, and beautiful themes, it’s a heartfelt, bittersweet film that will likely move viewers to both tears and smiles.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="manhwa" id="post-your-lie-in-april" data-slug="your lie in april">
+                        <img src=https://upload.wikimedia.org/wikipedia/en/thumb/d/de/Your_Lie_in_April_Manga_cover.png/250px-Your_Lie_in_April_Manga_cover.png alt="Your Lie In April">
+                        <div class="info">
+                            <h2>Your Lie In April</h2>
+                            <div class="details">
+                                <h3>Over View</h3>
+                                <p>"Your Lie in April" (Japanese: 四月は君の嘘, Shigatsu wa Kimi no Uso) is a manga series written and illustrated by Naoshi Arakawa, serialized from April 2011 to February 2015 in Kodansha's Monthly Shōnen Magazine. The story follows Kōsei Arima, a piano prodigy who loses the ability to hear the sound of his piano after his mother’s death, and Kaori Miyazono, a lively violinist whose unique playing style helps him rediscover his passion for music.</p>
+                                <h3>Plot</h3>
+                                <p>Kōsei, once a celebrated pianist, becomes unable to perform due to psychological trauma. His life is monotonous until he meets Kaori, who encourages him to play again. The series explores their journey through music competitions, personal growth, and emotional healing. Kōsei confronts his past, overcomes anxiety, and learns to express himself through music, culminating in performances that reflect both his talent and the support of those around him.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="manhwa" id="post-angel-beats" data-slug="angel beats">
+                        <img src=https://upload.wikimedia.org/wikipedia/en/a/a5/Angel_Beats%21_DVD_Complete_Collection_cover.jpg alt="Angel Beats">
+                        <div class="info">
+                            <h2>Angel Beats</h2>
+                            <div class="details">
+                                <h3>Plot</h3>
+                                <p>Angel Beats! is set in the environment of a high school in the afterlife, a type of limbo for people who have experienced trauma or hardships in life and must overcome them before passing on and being reincarnated. The story follows Yuzuru Otonashi, a boy with amnesia who ends up in the afterlife. He meets Yuri Nakamura, a girl who invites him to join the Afterlife Battlefront, or SSS, an organization she founded and leads which rebels against an unseen God for their unfair circumstances in life. Their enemy is Angel, the student council president, who has supernatural powers and is believed to be God's associate. After joining the SSS, Otonashi meets other members, including Hideki Hinata, the co-founder; Masami Iwasawa, the lead vocalist of a four-girl rock band, Girls Dead Monster (GDM); and Yui, a younger fan of GDM. Other than the SSS members, the afterlife is populated by fabricated students and teachers, whom Yuri refers to as "non-player characters" (NPCs).</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="manhwa" id="post-assassination-classroom" data-slug="assassination classroom">
+                        <img src="https://wallpaperaccess.com/full/5438669.jpg">
+                        <div class="info">
+                            <h2>Assassination Classroom</h2>
+                            <div class="details">
+                                <h3>Over View</h3>
+                                <p>"Assassination Classroom" (Japanese: 暗殺教室, Ansatsu Kyōshitsu) is a manga series written and illustrated by Yusei Matsui. It follows the story of a powerful, yellow, tentacled creature named Koro-sensei, who destroys 70% of the Moon and threatens to destroy Earth within a year. To prevent this, he becomes the homeroom teacher of Class 3-E at Kunugigaoka Junior High School, a class of academically disadvantaged students. The students are tasked with assassinating him before the school year ends, using specialized government-provided weapons, while Koro-sensei teaches them both regular subjects and assassination techniques.</p>
+                                <h3>Plot</h3>
+                                <p>The series blends action, comedy, and emotional drama. While the students attempt to kill Koro-sensei, they also grow academically and personally under his guidance. As students struggle with the challenge of killing a teacher who genuinely cares for them. Over time, the students uncover Koro-sensei’s past, his connection to their former teacher, and the true reason he must be killed.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </main>
+    </div>
+    <script>
+        function searchPosts() {
+            const query = document.getElementById('searchInput').value.trim().toLowerCase();
+            const posts = Array.from(document.querySelectorAll('.manhwa'));
+
+            if (!query) {
+                posts.forEach(post => post.style.display = 'block');
+                return;
+            }
+
+            let firstMatch = null;
+            posts.forEach(post => {
+                const slug = (post.dataset.slug || '').toLowerCase();
+                const text = post.textContent.toLowerCase();
+                const matched = slug.includes(query) || text.includes(query);
+                post.style.display = matched ? 'block' : 'none';
+                if (matched && !firstMatch) {
+                    firstMatch = post;
+                }
+            });
+
+            if (firstMatch) {
+                firstMatch.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                history.replaceState(null, '', `#${firstMatch.id}`);
+            }
+        }
+    </script>
+</body>
+</html>

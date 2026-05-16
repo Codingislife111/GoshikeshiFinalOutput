@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fantasy Anime List</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 50%, #ffecd2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            background: linear-gradient(45deg, #ff6b9d, #c44569, #f8b500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            color: #666;
+            font-weight: 300;
+        }
+
+        .search-box {
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        #searchInput {
+            width: 400px;
+            padding: 15px 20px;
+            font-size: 1.1em;
+            border: 2px solid #ff6b9d;
+            border-radius: 50px;
+            outline: none;
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.95);
+        }
+
+        #searchInput:focus {
+            border-color: #c44569;
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.4);
+            transform: scale(1.02);
+        }
+
+        .anime-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .anime-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+        }
+
+        .anime-card::before {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 2em;
+            z-index: 2;
+            opacity: 0.8;
+        }
+
+        .isekai-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(45deg, #ff6b9d, #c44569);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 25px;
+            font-size: 0.85em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 2;
+        }
+
+        .anime-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        .anime-poster {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .anime-card:hover .anime-poster {
+            transform: scale(1.1);
+        }
+
+        .anime-info {
+            padding: 25px;
+            position: relative;
+            z-index: 3;
+        }
+
+        .anime-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .anime-year {
+            color: #ff6b9d;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .anime-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 0.95em;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            background: linear-gradient(45deg, #a8edea, #fed6e3);
+            color: #333;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stars {
+            color: #f8b500;
+            font-size: 1.2em;
+        }
+
+        .score {
+            font-weight: bold;
+            color: #c44569;
+            font-size: 1.1em;
+        }
+
+        .no-results {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 60px;
+            color: #666;
+            font-size: 1.2em;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5em;
+            }
+            
+            #searchInput {
+                width: 90%;
+            }
+            
+            .anime-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧙‍♂️ Fantasy Anime</h1>
+            <p class="subtitle">Where magic breathes, legends rise, and impossible worlds come alive.</p>
+        </header>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search isekai worlds... 🏰">
+        </div>
+
+        <div class="anime-grid" id="animeGrid">
+        </div>
+    </div>
+
+    <script>
+        const animeData = [
+            {
+                title: "Demon slayer: Kimetsu no Yaiba",
+                year: "2019",
+                description: "It is the Taisho Period in Japan. Tanjiro, a kindhearted boy who sells charcoal for a living, finds his family slaughtered by a demon. To make matters worse, his younger sister Nezuko, the sole survivor, has been transformed into a demon herself. Though devastated by this grim reality, Tanjiro resolves to become a “demon slayer” so that he can turn his sister back into a human, and kill the demon that massacred his family.",
+                poster: "https://wallpapercave.com/wp/wp7626926.jpg",
+                tags: ["Fantasy", "action","Shonen"],
+                score: 9.9
+            },
+            {
+                title: "Black Clover",
+                year: "2020",
+                description: "In a world where magic is everything, Asta and Yuno are both found abandoned at a church on the same day. While Yuno is gifted with exceptional magical powers, Asta is the only one in this world without any. At the age of fifteen, both receive grimoires, magic books that amplify their holder’s magic. Asta’s is a rare Grimoire of Anti-Magic that negates and repels his opponent’s spells. ",
+                poster: "https://tse2.mm.bing.net/th/id/OIP.EgO-rssAqFpLR8kdNx3elAHaEo?rs=1&pid=ImgDetMain&o=7&rm=3",
+                tags: ["Fantasy", "action","Comedy", "adventure", "Shonen"],
+                score: 9.8
+            },
+            {
+                title: "Chainsaw Man – The Movie: Reze Arc",
+                year: "2025",
+                description: "Follows Denji as he meets Reze, a mysterious girl who brings a brief sense of normalcy into his chaotic life. As their bond deepens, hidden truths emerge, pulling Denji into a dangerous conflict filled with betrayal, explosive battles, and the harsh reality of love in a world ruled by devils.",
+                poster: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT59mk3Jd4Ehej2YTfUrSpyZFNSdrry4X0109soSDojVmJ6t562t2PMCEJdW72wAADfP0l&s=10",
+                tags: ["Dark Fantasy", "Horror", "Romance","Action"],
+                score: 8.3
+            },
+            {
+                title: "Dandadan",
+                year: "2024",
+                description: "When Momo and Okarun's beliefs clash, they're thrown into a world of ghosts, aliens and awakened powers.",
+                poster: "https://m.media-amazon.com/images/M/MV5BYWFhOWMxNTYtZThiMi00ZmQ5LTlmODktN2QwNzUyZjMyZGQzXkEyXkFqcGc@._V1_.jpg",
+                tags: ["Alien Invasion", "Dark Comedy", "SuperNatural"],
+                score: 8.3
+            },
+            {
+                title: "Solo leveling",
+                year: "2024",
+                description: "Follows the adventures of Sung Jinwoo in a world that is constantly threatened by monsters and evil forces. In his battles Sung transforms himself from the weakest hunter of all mankind to one of the strongest hunters in existence.",
+                poster: "https://sm.ign.com/ign_za/review/s/solo-level/solo-leveling-premiere-review_3r27.jpg",
+                tags: ["Survival", "Action", "System",],
+                score: 8.5
+            },
+            {
+                title: "Hunter-X-Hunter",
+                year: "2011",
+                description: "Gon Freecss aspires to become a Hunter, an exceptional being capable of greatness. With his friends and his potential, he seeks out his father, who left him when he was younger.",
+                poster: "https://static1.dualshockersimages.com/wordpress/wp-content/uploads/2024/01/hunter-x-hunter-1.jpg",
+                tags: ["Dark Fantasy", "Action","adventure", "Drama"],
+                score: 9.0
+            },
+            {
+                title: "Fire Force",
+                year: "2019",
+                description: "Tokyo is burning, and citizens are mysteriously suffering from spontaneous human combustion throughout the city! Responsible for snuffing out this inferno is the Fire Force, and Shinra is ready to join their fight. Now, as part of Company 8, he’ll use his devil’s footprints to help keep the city from turning to ash! But his past and a burning secret behind the scenes could set everything ablaze.",
+                poster: "https://wallpaperaccess.com/full/1114611.png",
+                tags: ["Fantasy", "Action","adventure", "Sci-fi","shonen"],
+                score: 9.4
+            },
+            {
+                title: "86 EIGHTY-SIX",
+                year: "2021",
+                description: "Called “Juggernaut,” these are the unmanned combat drones developed by the Republic of San Magnolia in answer to the attacks by the autonomous unmanned drones of the neighboring Empire of Giad, the “Legion”. But they’re only unmanned in name. In reality, they are piloted by the Eighty-sixers—those considered to be less than human and treated as mere tools. Determined to achieve his own mysterious ends, Shin, the captain of Spearhead Squadron, which is comprised of Eighty-sixers, continues to fight a hopeless war on a battlefield where only death awaits him.",
+                poster: "https://comicbook.com/wp-content/uploads/sites/4/2025/08/Lena-and-Shin-from-86.jpg?w=1109",
+                tags: ["Fantasy", "Action","adventure", "Sci-fi"],
+                score: 9.4
+            },
+            {
+                title: "Gachiakuta",
+                year: "2025",
+                description: "In a floating city where the rich discard their waste—and people—Rudo is framed for murder and thrown into the Pit, where a hellscape of mutated trash beasts dwell. To survive, he must wield a new power and join the rogue Cleaners. Rudo doesn’t just aim to battle monsters, but the corrupt who cast him into Hell.",
+                poster: "https://4kwallpapers.com/images/wallpapers/gachiakuta-season-1-1920x1080-23000.jpg",
+                tags: ["Fantasy", "Action","Drama"],
+                score: 9.9
+            },
+            {
+                title: "Farming life in another world",
+                year: "2023",
+                description: "When a godlike figure gives Hiraku a chance to live again, he wishes to be healthy, to live peacefully, to speak the local language, and to spend his days on an idyllic farm.",
+                poster: "https://images.plex.tv/photo?size=large-1280&url=https:%2F%2Fmetadata-static.plex.tv%2F5%2Fgracenote%2F582af459c1cc8be7e277688a27b8e105.jpg",
+                tags: ["slice of life", "isekai","fantasy"],
+                score: 7.3
+            },
+            {
+                title: "Kaiju No. 8",
+                year: "2024",
+                description: "In a world plagued by creatures known as Kaiju, Kafka Hibino aspired to enlist in The Defense Force. He makes a promise to enlist with his childhood friend, Mina Ashiro. Soon, life takes them in separate ways. While employed cleaning up after Kaiju battles, Kafka meets Reno Ichikawa. Reno’s determination to join The Defense Force reawakens Kafka’s promise to join Mina and protect humanity.",
+                poster: "https://tse3.mm.bing.net/th/id/OIP.0S1lyVE7RhZRpSJYXm0QqwHaEK?rs=1&pid=ImgDetMain&o=7&rm=3",
+                tags: ["action", "sci-fi","fantasy","shonen"],
+                score: 7.3
+            },
+            {
+                title: "Tokyo Ghoul",
+                year: "2014",
+                description: "Haise Sasaki has been tasked with teaching Qs Squad how to be outstanding investigators, but his assignment is complicated by the troublesome personalities of his students and his own uncertain grasp of his Ghoul powers. Can he pull them together as a team, or will Qs Squad first assignment be their last?",
+                poster: "https://images4.alphacoders.com/596/596845.jpg",
+                tags: ["Action", "Thriller","Fantasy","Seinen"],
+                score: 9.5
+            },
+            {
+                title: "I Got Cheat Skill In Another World And Became Unrivaled In The Real World, Too",
+                year: "2023",
+                description: "All his life, Yuuya has been bullied at school and neglected by his parents. After moving into his late grandfather’s home, he discovers a strange door that seems to be calling out to him. Yuuya opens the door, steps inside, and is suddenly transported to a magical world! This new world holds rare treasures and grants him powerful skills, which he takes back to Earth for a new lease on life.",
+                poster: "https://wallpapercave.com/wp/wp12352788.jpg",
+                tags: ["action", "Adventure","fantasy","Seinen"],
+                score: 9.6
+            },
+            {
+                title: "Dead Mount Death Play",
+                year: "2023",
+                description: "As a legendary hero nears victory against a necromancer known as The Corpse God, things take an unexpected turn with the dark sorcerer’s final gambit—reincarnation magic. This last-ditch effort catches the brave fighter off guard, and now he’s a boy named Polka Shinoyama in a whole new world! The showdown between good and evil just got epic.",
+                poster: "https://images.plex.tv/photo?size=large-1280&url=https%3A%2F%2Fmetadata-static.plex.tv%2Fe%2Fgracenote%2Feb7ddcce524b5b352ddef2c49ad40ae7.jpg",
+                tags: ["action", "isekai","fantasy"],
+                score: 7.3
+            },
+            {
+                title: "I Was Reincarnated as the 7th Prince So I Can Take My Time Perfecting My Magical Ability",
+                year: "2024",
+                description: "Reborn with the perfect bloodline, this sorcerer is determined to enjoy his new life using his extraordinary magical abilities to master the study of magic that was beyond his reach in his previous life!.",
+                poster: "https://resizing.flixster.com/g3KXRRua2oP_kCPZYv4aBChTQ_c=/fit-in/705x460/v2/https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p26867817_i_h10_ac.jpg",
+                tags: ["slice of life", "Sword And Sorcery", "Comedy"],
+                score: 6.9
+            },
+            {
+                title: "Gate",
+                year: "2015",
+                description: "On August 20XX, a gate suddenly appears in Tokyo's Ginza district, unleashing a portal where monsters, medieval knights and other fantasy beings come from another world and wreak havoc on Tokyo. The Japanese Defense Force take action against these monsters and push them back into the Gate. Third Reconnaissance Team is dispatched to the Special Region lead by officer (and otaku) Youji Itami. On their travels, they are joined by a beautiful elf girl who is a survivor from the dragon's rampage and guide the group across the dangerous new world.",
+                poster: "https://images.plex.tv/photo?size=large-1280&url=https:%2F%2Fmetadata-static.plex.tv%2Fb%2Fgracenote%2Fb9b0648af720de60a197b26114398649.jpg",
+                tags: ["action", "adventure", "fantasy","seinen"],
+                score: 6.9
+            },
+            {
+                title: "As a Reincarnated Aristocrat, I'll Use My Appraisal Skill to Rise in the World",
+                year: "2024",
+                description: "Reborn as nobility with the power to size up talent in a glance, Ars Louvent is on a mission to elevate his new life.",
+                poster: "https://static.wikia.nocookie.net/vsbattles/images/4/4f/Asareincarnatedaristocratillusemyappraisalskilltoriseintheworld_keyvisual2-scaled.webp/revision/latest/scale-to-width-down/800?cb=20240528044113",
+                tags: ["Isekai", "Adventure", "Sword And Sorcery"],
+                score: 6.8
+            },
+            {
+                title: "Delicious in Dungeon",
+                year: "2024",
+                description: "Can sisters be reincarnated from dragon meat? Laios and his friends Marcille and Chilchuck delve into an endless dungeon in search of his fallen sister, fighting monsters, starvation, and corruption.",
+                poster: "https://m.media-amazon.com/images/M/MV5BMTY3NzZlNGItYWZlOS00MTQzLThlNmMtMzI3MDY1NWM2MjQyXkEyXkFqcGc@._V1_.jpg",
+                tags: ["Adventure Epic", "comedy", "Seinen"],
+                score: 8.1
+            },
+            
+        ];
+
+        function createAnimeCard(anime) {
+            const stars = '★'.repeat(Math.floor(anime.score)) + '☆'.repeat(10 - Math.floor(anime.score));
+            
+            return `
+                <div class="anime-card">
+                    <div class="isekai-badge">Fantasy</div>
+                    <img src="${anime.poster}" alt="${anime.title}" class="anime-poster">
+                    <div class="anime-info">
+                        <h3 class="anime-title">${anime.title}</h3>
+                        <div class="anime-year">${anime.year}</div>
+                        <p class="anime-description">${anime.description}</p>
+                        <div class="tags">
+                            ${anime.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                        <div class="rating">
+                            <span class="stars">${stars}</span>
+                            <span class="score">${anime.score}/10</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayAnime(animeList) {
+            const grid = document.getElementById('animeGrid');
+            grid.innerHTML = animeList.map(createAnimeCard).join('');
+        }
+
+        function searchAnime() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = animeData.filter(anime => 
+                anime.title.toLowerCase().includes(query) ||
+                anime.description.toLowerCase().includes(query) ||
+                anime.tags.some(tag => tag.toLowerCase().includes(query))
+            );
+            
+            if (filtered.length === 0) {
+                document.getElementById('animeGrid').innerHTML = `
+                    <div class="no-results">
+                        <!-- <h2>🌌 No isekai found</h2>
+                        <p>Try searching for another world!</p> -->
+                        <h2> Wala ngani!! </h2>
+                        <video class"anime poster" src="Photos/baliw.mp4" autoplay loop width="100%"></video>
+                        <a href="../index.html">Back To Home Page</a>
+                    </div>
+                `;
+            } else {
+                displayAnime(filtered);
+            }
+        }
+
+        // Initialize
+        displayAnime(animeData);
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', searchAnime);
+    </script>
+</body>
+</html>

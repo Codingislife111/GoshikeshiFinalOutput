@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sports Anime List</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+         body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 50%, #ffecd2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            color: #fff;
+            font-weight: 300;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .search-box {
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        #searchInput {
+            width: 400px;
+            padding: 15px 20px;
+            font-size: 1.1em;
+            border: 2px solid #4ecdc4;
+            border-radius: 50px;
+            outline: none;
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.95);
+        }
+
+        #searchInput:focus {
+            border-color: #ff6b6b;
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.4);
+            transform: scale(1.02);
+        }
+
+        .anime-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .anime-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+        }
+
+        .anime-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1);
+        }
+
+        .anime-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+        }
+
+        .anime-poster {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .anime-card:hover .anime-poster {
+            transform: scale(1.1);
+        }
+
+        .anime-info {
+            padding: 25px;
+        }
+
+        .anime-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .anime-year {
+            color: #4ecdc4;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .anime-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 0.95em;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: #fff;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stars {
+            color: #feca57;
+            font-size: 1.2em;
+        }
+
+        .score {
+            font-weight: bold;
+            color: #ff6b6b;
+            font-size: 1.1em;
+        }
+
+        .sport-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255,107,107,0.9);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 25px;
+            font-size: 0.85em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .no-results {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 60px;
+            color: #fff;
+            font-size: 1.2em;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5em;
+            }
+            
+            #searchInput {
+                width: 90%;
+            }
+            
+            .anime-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚽ Sports Anime</h1>
+            <p class="subtitle">Sweat, tears, and triumphs - the ultimate sports anime collection</p>
+        </header>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search for your favorite sports anime... 🏆">
+        </div>
+
+        <div class="anime-grid" id="animeGrid">
+            <!-- Anime cards will be populated by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        const animeData = [
+            {
+                title: "Haikyuu!!",
+                year: "2014",
+                sport: "Volleyball",
+                description: "Shoyo Hinata joins Karasuno High's volleyball team to become the Little Giant, partnering with his rival-turned-teammate Tobio Kageyama.",
+                poster: "https://dakilanglaagan.com/wp-content/uploads/2021/01/haikyuu.jpg",
+                tags: ["Teamwork", "School", "Friendship"],
+                score: 9.1
+            },
+            {
+                title: "Blue Lock",
+                year: "2022",
+                sport: "Soccer",
+                description: "Japan's soccer program gathers 300 young strikers to create the world's greatest egoist striker through brutal competition.",
+                poster: "https://static0.gamerantimages.com/wordpress/wp-content/uploads/2022/12/blue-lock-team-z-anime-promo.jpg?q=70&fit=crop&w=1200&h=628&dpr=1",
+                tags: ["Intense", "Psychological", "Competition"],
+                score: 8.4
+            },
+            {
+                title: "Kuroko's Basketball",
+                year: "2012",
+                sport: "Basketball",
+                description: "Tetsuya Kuroko, the sixth man of the Generation of Miracles, teams up with Taiga Kagami to defeat his former teammates.",
+                poster: "https://i0.wp.com/dailyanimeart.com/wp-content/uploads/2014/12/kurokos-basketball1.jpg?fit=1200%2C750&ssl=1",
+                tags: ["Supernatural", "Rivalry", "Teamwork"],
+                score: 8.3
+            },
+            {
+                title: "SK8 the Infinity",
+                year: "2021",
+                sport: "Skateboarding",
+                description: "High school students Reki and Langa are hooked on one thing—a dangerous, top secret, no-holds-barred downhill skateboarding race called “S.” When Reki takes Langa, a transfer student, to the mountain where “S” is held, Langa finds himself sucked in. These colorful skaters will take you through a thrilling story of skateboard battles and unlimited possibilities!",
+                poster: "https://www.themoviedb.org/t/p/original/ohOrfdh80HVY5QBD8kV2FYYSVwF.jpg",
+                tags: ["sports"],
+                score: 8.9
+            },
+            {
+                title: "Slam Dunk",
+                year: "1993",
+                sport: "Basketball",
+                description: "Delinquent Hanamichi Sakuragi joins the basketball team to impress a girl and discovers his true passion for the sport.",
+                poster: "https://a.storyblok.com/f/178900/640x371/1aea2ff8c6/092e0927758200303c6c0dedf136f5441628858780_main.jpg/m/filters:quality(95)format(webp)",
+                tags: ["Classic", "Comedy", "Growth"],
+                score: 9.0
+            },
+            {
+                title: "Run with the Wind",
+                year: "2018",
+                sport: "Track & Field",
+                description: "A group of college students form a relay team to compete in Japan's most prestigious long-distance race.",
+                poster: "https://i0.wp.com/anitrendz.net/news/wp-content/uploads/2019/04/Screen-Shot-2019-04-28-at-12.59.01-PM.png?fit=2874%2C1594&ssl=1",
+                tags: ["Drama", "Realistic", "Teamwork"],
+                score: 8.6
+            },
+            {
+                title: "Yuri!!! on Ice",
+                year: "2016",
+                sport: "Figure Skating",
+                description: "Yuri Katsuki finds new motivation when Russian skating star Yuri Plisetsky and Victor Nikiforov take interest in him.",
+                poster: "https://blushinggeek.com/wp-content/uploads/2021/03/12-reasons-why-im-obsessed-with-yuri-on-ice-blushinggeek.jpg",
+                tags: ["LGBTQ+", "Music", "Drama"],
+                score: 8.0
+            },
+            {
+                title: "Ping Pong the Animation",
+                year: "2014",
+                sport: "Table Tennis",
+                description: "Two childhood friends with contrasting personalities pursue their dreams in table tennis.",
+                poster: "https://2danicritic.github.io/index_files/ReviewImages/review_Ping_Pong_the_Animation.jpg",
+                tags: ["Artistic", "Psychological", "Friendship"],
+                score: 8.6
+            },
+            {
+                title: "Hajime no Ippo",
+                year: "2000",
+                sport: "Boxing",
+                description: "A shy, bullied teenager discovers boxing and transforms into a fierce competitor.",
+                poster: "https://neetaku86.wordpress.com/wp-content/uploads/2015/10/wallpaper-hajime-no-ippo.jpg",
+                tags: ["Long-running", "Realistic", "Growth"],
+                score: 8.8
+            },
+        ];
+
+        function createAnimeCard(anime) {
+            const stars = '★'.repeat(Math.floor(anime.score)) + '☆'.repeat(10 - Math.floor(anime.score));
+            
+            return `
+                <div class="anime-card">
+                    <div class="sport-badge">${anime.sport}</div>
+                    <img src="${anime.poster}" alt="${anime.title}" class="anime-poster">
+                    <div class="anime-info">
+                        <h3 class="anime-title">${anime.title}</h3>
+                        <div class="anime-year">${anime.year}</div>
+                        <p class="anime-description">${anime.description}</p>
+                        <div class="tags">
+                            ${anime.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                        <div class="rating">
+                            <span class="stars">${stars}</span>
+                            <span class="score">${anime.score}/10</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayAnime(animeList) {
+            const grid = document.getElementById('animeGrid');
+            grid.innerHTML = animeList.map(createAnimeCard).join('');
+        }
+
+        function searchAnime() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = animeData.filter(anime => 
+                anime.title.toLowerCase().includes(query) ||
+                anime.description.toLowerCase().includes(query) ||
+                anime.sport.toLowerCase().includes(query) ||
+                anime.tags.some(tag => tag.toLowerCase().includes(query))
+            );
+            
+            if (filtered.length === 0) {
+                document.getElementById('animeGrid').innerHTML = `
+                    <div class="no-results">
+                        <!-- <h2>🏆 No matches found</h2>
+                        <p>Try searching for a different sport or anime!</p> -->
+                         <h2> Wala ngani!! </h2>
+                        <video class"anime poster" src="Photos/baliw.mp4" autoplay loop width="100%"></video>
+                        <a href="../index.html">Back To Home Page</a>
+                    </div>
+                `;
+            } else {
+                displayAnime(filtered);
+            }
+        }
+
+        // Initialize
+        displayAnime(animeData);
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', searchAnime);
+    </script>
+</body>
+</html>

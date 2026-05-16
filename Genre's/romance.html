@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Romance Anime List</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 50%, #ffecd2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            background: linear-gradient(45deg, #ff6b9d, #c44569, #f8b500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            color: #666;
+            font-weight: 300;
+        }
+
+        .search-box {
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        #searchInput {
+            width: 400px;
+            padding: 15px 20px;
+            font-size: 1.1em;
+            border: 2px solid #ff6b9d;
+            border-radius: 50px;
+            outline: none;
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.95);
+        }
+
+        #searchInput:focus {
+            border-color: #c44569;
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.4);
+            transform: scale(1.02);
+        }
+
+        .anime-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .anime-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+        }
+
+        .anime-card::before {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 2em;
+            z-index: 2;
+            opacity: 0.8;
+        }
+
+        .isekai-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(45deg, #ff6b9d, #c44569);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 25px;
+            font-size: 0.85em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 2;
+        }
+
+        .anime-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+
+        .anime-poster {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .anime-card:hover .anime-poster {
+            transform: scale(1.1);
+        }
+
+        .anime-info {
+            padding: 25px;
+            position: relative;
+            z-index: 3;
+        }
+
+        .anime-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .anime-year {
+            color: #ff6b9d;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .anime-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 0.95em;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            background: linear-gradient(45deg, #a8edea, #fed6e3);
+            color: #333;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stars {
+            color: #f8b500;
+            font-size: 1.2em;
+        }
+
+        .score {
+            font-weight: bold;
+            color: #c44569;
+            font-size: 1.1em;
+        }
+
+        .no-results {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 60px;
+            color: #666;
+            font-size: 1.2em;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5em;
+            }
+            
+            #searchInput {
+                width: 90%;
+            }
+            
+            .anime-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💕 Romance Anime</h1>
+            <p class="subtitle">Heartwarming stories that will make you believe in love</p>
+        </header>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search for your favorite romance anime... 💖">
+        </div>
+        
+        <div class="anime-grid" id="animeGrid">
+            <!-- Anime cards will be populated by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        const animeData = [
+            {
+                title: "Your Lie in April",
+                year: "2014",
+                description: "A piano prodigy who lost his ability to play after his mother's death meets a free-spirited violinist who helps him find his passion for music again.",
+                poster: "https://tse1.mm.bing.net/th/id/OIP.LkcdZfyYcRMTYha0X4v7JQHaE8?rs=1&pid=ImgDetMain&o=7&rm=3",
+                tags: ["Music", "Drama", "Tearjerker"],
+                score: 8.6
+            },
+            {
+                title: "Horimiya",
+                year: "2021",
+                description: "Two high school students with completely different personalities discover each other's hidden sides and fall in love.",
+                poster: "https://play-lh.googleusercontent.com/hpEpP_KcVgdrROl_9n0D4RmnT5teXM6PFQRjDHhwyzhPgi9cB-Y_wOawlKROEVSYSrF64lscVoX5=w1296-h2160-rw",
+                tags: ["Slice of Life", "School", "Comedy"],
+                score: 8.3
+            },
+            {
+                title: "Kaguya-sama: Love is War",
+                year: "2019",
+                description: "Two genius students are locked in a battle of wits to make the other confess their love first.",
+                poster: "https://bgeek.eu/wp-content/uploads/2021/05/love.jpg",
+                tags: ["Comedy", "Psychological", "School"],
+                score: 8.4
+            },
+            {
+                title: "Fruits Basket",
+                year: "2019",
+                description: "A girl who can hug the members of the zodiac curse discovers the heartbreaking secrets behind their transformations.",
+                poster: "https://m.media-amazon.com/images/S/pv-target-images/7a9425e9da27f06e07b09f8d384e5afb132258893703132cd25e81acd403df5c._SX1080_FMjpg_.jpg",
+                tags: ["Drama", "Supernatural", "Family"],
+                score: 9.0
+            },
+            {
+                title: "My Teen Romantic Comedy SNAFU",
+                year: "2013",
+                description: "A cynical loner joins a club that helps students with their problems and learns about friendship and love.",
+                poster: "https://m.media-amazon.com/images/S/pv-target-images/44ed635cfc9b176cb3c63c0e4245b5158cfa92ed9bdef6bb5a11a9ce98dd4747.jpg",
+                tags: ["Comedy", "Drama", "School"],
+                score: 8.0
+            },
+
+            {
+                title: "Hello World",
+                year: "2019",
+                description: "One day, while out on a walk, Naomi witnesses a crimson aurora pierce through the sky for a brief moment before vanishing. Shortly after, he encounters a three-legged crow and a mysterious hooded man, who reveals himself to be Naomi from 10 years in the future, explaining that he has come to change an imminent tragic event that happens to Ruri soon after they start dating. Initially taking his words with a grain of salt, present-day Naomi follows his future self's instructions and starts getting closer to Ruri, determined to save her. Will he be able to change the future?",
+                poster: "https://i.ytimg.com/vi/_I95N52EeVg/maxresdefault.jpg",
+                tags: ["Romance", "Science fiction", "Drama"],
+                score: 8.49
+            },
+
+            {
+                title: "Tamako Love Story",
+                year: "2014",
+                description: "Tamako's life changes when her best friend, Mochizou, suddenly confesses his love for her.",
+                poster: "https://s4.anilist.co/file/anilistcdn/media/anime/banner/20519-xmPmzDJtqCRp.jpg",
+                tags: ["Romance", "Comedy"],
+                score: 8.6
+            },
+
+             {
+                title: "Komi Can't Communicate",
+                year: "2021",
+                description: "Timid Tadano is a total wallflower, and that’s just the way he likes it. But all that changes when he finds himself alone in a classroom on the first day of high school with the legendary Komi. He quickly realizes she isn’t aloof—she’s just super awkward. Now he’s made it his mission to help her on her quest to make 100 friends!!",
+                poster: "https://stagbite.com/wp-content/uploads/2023/07/Komi-Cant-Communicate-Characters-728x518.jpg",
+                tags: ["Romance", "Comedy"],
+                score: 9.8
+            },
+            {
+                title: "My Little Monster",
+                year: "2008",
+                description: "Impassive girl meets trouble maker in a brand new love story!After Mizutani Shizuku, a girl whose sole interest is studying, is asked to deliver some handouts to Yoshida Haru, a boy who hasn't come to school after spilling blood on the first day, she finds herself the target of his affection.This is a story about a boy and a girl who struggle with love and friendship.Opening yourself up to...",
+                poster: "https://tse3.mm.bing.net/th/id/OIP.ubVrp0zaTkQDn17gboigTAHaEo?w=2560&h=1600&rs=1&pid=ImgDetMain&o=7&rm=3",
+                tags: ["Romance", "Comedy"],
+                score: 8.3
+            },
+
+            {
+                title: "Kimi Ni Todoke",
+                year: "2023",
+                description: "Sawako Kuronuma has had a difficult time fitting in. Some say it's her jet black hair, others say it's her hushed manner of speaking, while still others claim it is due to her name's similarity to Sadako, a character from a popular Japanese horror series. On her first day of high school, Sawako meets the one boy who treats her like a normal girl-Shota Kazehaya. Through his selfless aid, Sawako slowly learns to come out of her shell and even begins to make friends for the first time in her life. However, with a new social life come social pressures. Rumors begin to circulate about her, her friends, and even the kindhearted Kazehaya. As she grows into her new identity, Sawako must learn to deal with such pressures as well as start to understand the unfamiliar feelings inside of her, especially in regards to the boy who made her new start possible.",
+                poster: "https://i.pinimg.com/originals/4e/70/f5/4e70f50dc9f14d078aaa86c1924321b9.jpg",
+                tags: ["Shojo"],
+                score: 8.7
+            },
+
+            {
+                title: "Hyouka",
+                year: "2012",
+                description: "A worthy addition to any animation fan's collection, Hyouka is a stunning masterwork that spins a charming tale of high school romance and mystery. After disenchanted student Hotaro Oreki joins his school’s Classic Lit Club, he meets Eru Chitanda, a kindhearted and inquisitive girl with boundless curiosity and a knack for getting him caught up in all sorts of trouble.",
+                poster: "https://wallpaperaccess.com/full/1718882.jpg",
+                tags: ["Romance", "Detective"],
+                score: 8.8
+            },
+
+            {
+                title: "Rascal Does Not Dream Of A Bunny Girl",
+                year: "2018",
+                description: "Sakuta Azusagawa, a high school nobody, never expected to find a bunny girl in the library. What’s more, the girl he meets isn’t just anyone—she’s a former actress and popular upperclassman—or at least she was, until, somehow, she disappeared from everyone’s view. Now, Sakuta is the only one who can see her or even remember that she existed. Perhaps going unnoticed is just a symptom of puberty.",
+                poster: "https://imgsrv.crunchyroll.com/cdn-cgi/image/fit=contain,format=auto,quality=70,width=1200,height=675/catalog/crunchyroll/5c3d59bd3510729f72aaa740eed30a5f.jpg",
+                tags: ["Comedy", "Drama", "Romance", "Seinen", "Supernatural"],
+                score: 9.4
+            },
+
+            {
+                title: "The Angel Next Door",
+                year: "",
+                description: "After a kind gesture and seeing how untidy her neighbor and classmate is, Mahiru thanks Amane by making sure he lives properly with a clean house and home-cooked meals. Such a generous way to show her appreciation for that rainy day Amane lent her an umbrella. This is the story of a sweet if somewhat vexing romance between a boy and the girl next door.",
+                poster: "https://wallpaperaccess.com/full/8986556.jpg",
+                tags: ["Comedy", "Shonen", "Romance"],
+                score: 9.9
+            },
+            {
+                title: "hokkaido gals are super adorable",
+                year: "2024",
+                description: "Snowflakes aren’t the only things dropping in Hokkaido—so are jaws, thanks to the super adorable gals who are turning the icy north into a hotbed of fashion and fun. Brace yourself for a winter storm of laughs, love, and killer outfits as these gals prove that being cute is an all-season affair. Here, frostbite meets fashionista!",
+                poster: "https://tse2.mm.bing.net/th/id/OIP.Bjm42rzwFnonuhof8GxQ8QHaEK?rs=1&pid=ImgDetMain&o=7&rm=3",
+                tags: ["Romance", "Comedy"],
+                score: 9.7
+            },
+            {
+                title: "Tsuki ga Kirei",
+                year: "2017",
+                description: "Two middle school students experience their first love in this beautifully realistic portrayal of young romance.",
+                poster: "https://i0.wp.com/wrongeverytime.com/wp-content/uploads/2017/05/2017-05-25_14-22-56.jpg?ssl=1",
+                tags: ["Slice of Life", "Realistic", "Coming of Age"],
+                score: 8.2
+            },
+            {
+                title: "Golden Time",
+                year: "2013",
+                description: "A college student with amnesia navigates love, friendship, and his mysterious past.",
+                poster: "https://i0.wp.com/thevaultpublication.com/wp-content/uploads/2014/04/golden-time-img10.png?fit=1200%2C675&ssl=1",
+                tags: ["College", "Drama", "Romance"],
+                score: 7.8
+            },
+            {
+                title: "Wotakoi: Love is Hard for Otaku",
+                year: "2018",
+                description: "Four nerdy coworkers navigate the complexities of adult romance while balancing their otaku hobbies.",
+                poster: "https://i2.wp.com/sequentialplanet.com/wp-content/uploads/2018/06/Wotaku-ni-Koi-wa-Muzukashii-Season-2-release-date-WotaKoi-Love-is-Hard-for-Otaku-manga-compared-to-the-anime-Spoilers.jpg?fit=800%2C450&ssl=1",
+                tags: ["Comedy", "Workplace", "Otaku"],
+                score: 7.9
+            }
+        ];
+
+        function createAnimeCard(anime) {
+            const stars = '★'.repeat(Math.floor(anime.score)) + '☆'.repeat(10 - Math.floor(anime.score));
+            
+            return `
+                <div class="anime-card">
+                    <img src="${anime.poster}" alt="${anime.title}" class="anime-poster">
+                    <div class="anime-info">
+                        <h3 class="anime-title">${anime.title}</h3>
+                        <div class="anime-year">${anime.year}</div>
+                        <p class="anime-description">${anime.description}</p>
+                        <div class="tags">
+                            ${anime.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                        <div class="rating">
+                            <span class="stars">${stars}</span>
+                            <span class="score">${anime.score}/10</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayAnime(animeList) {
+            const grid = document.getElementById('animeGrid');
+            grid.innerHTML = animeList.map(createAnimeCard).join('');
+        }
+
+        function searchAnime() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = animeData.filter(anime => 
+                anime.title.toLowerCase().includes(query) ||
+                anime.description.toLowerCase().includes(query) ||
+                anime.tags.some(tag => tag.toLowerCase().includes(query))
+            );
+            
+            if (filtered.length === 0) {
+                document.getElementById('animeGrid').innerHTML = `
+                    <div class="no-results">
+                        <!-- <h2>💔 No anime found</h2> -->
+                        <!-- <p>Try searching for something else!</p> -->
+                        <h2> wala ngani!! </h2>
+                        <video class="anime poster" src="Photos/baliw.mp4" autoplay loop width="100%"></video>
+                        <a href="../index.html">Back To Home Page</a>
+                    </div>
+                `;
+            } else {
+                displayAnime(filtered);
+            }
+        }
+
+        // Initialize
+        displayAnime(animeData);
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', searchAnime);
+    </script>
+</body>
+</html>
